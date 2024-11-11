@@ -1,8 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import SignIn from '../components/SignIn.vue';
 import IndexPage from '../components/IndexPage.vue';
+import SignIn from '../components/SignIn.vue';
 import AboutPage from '../components/AboutPage.vue';
-import DetailPage from '../components/DetailPage.vue'
+import DetailPage from '../components/DetailPage.vue';
+import ManagerPage from '../components/ManaGer.vue'
 
 
 
@@ -10,10 +11,11 @@ import DetailPage from '../components/DetailPage.vue'
 
 
 const routes = [
+    { path: '/', component: IndexPage },
     { path: '/signin', component: SignIn },
-    { path: '/index', component: IndexPage },
     { path: '/about', component: AboutPage },
-    { path: '/detail', component: DetailPage }
+    { path: '/detail', component: DetailPage },
+    { path: '/manager', component: ManagerPage }
 
 ];
 
