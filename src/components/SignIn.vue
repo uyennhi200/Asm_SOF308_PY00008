@@ -1,36 +1,57 @@
 <template>
   <div class="page-wrapper">
+    <!-- Welcome Section -->
     <div class="welcome-content text-center animate__animated animate__fadeIn">
       <div class="brand-logo mb-4">
         <i class="fas fa-user-circle fa-4x text-primary"></i>
       </div>
       <h2 class="fw-bold mb-4">Online Entertainment</h2>
-      <button class="btn btn-primary btn-lg px-5" @click="showSignIn = true">
+      <button class="btn btn-primary btn-lg px-5" @click="openModal('signin')">
         Get Started
       </button>
     </div>
 
-    <!-- Modal Sign In -->
-    <div v-if="showSignIn" class="modal fade" :class="{'show': showSignIn}" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered animate__animated" :class="modalAnimation">
+    <!-- Modal -->
+    <div
+      v-if="showModal"
+      class="modal fade show"
+      tabindex="-1"
+      role="dialog"
+      style="display: block;"
+    >
+      <div
+        class="modal-dialog modal-dialog-centered animate__animated"
+        :class="modalAnimation"
+      >
         <div class="modal-content">
           <div class="modal-header border-0">
-            <h5 class="modal-title">Sign In</h5>
-            <button type="button" class="btn-close" @click="showSignIn = false"></button>
+            <h5 class="modal-title">{{ modalTitle }}</h5>
+            <button
+              type="button"
+              class="btn-close"
+              @click="closeModal"
+            ></button>
           </div>
           <div class="modal-body p-4">
-            <p class="text-danger">{{ error }}</p>
-            <form @submit.prevent="submitLogin">
+            <div v-if="errorMessage" class="alert alert-danger text-center">
+              {{ errorMessage }}
+            </div>
+
+            <!-- Sign In Form -->
+            <form
+              v-if="currentModal === 'signin'"
+              @submit.prevent="submitSignIn"
+            >
               <div class="form-floating mb-3">
                 <input
-                  type="text"
+                  type="email"
                   class="form-control"
                   id="username"
-                  placeholder="Username"
-                  v-model="username"
+                  placeholder="Email"
+                  v-model="email"
                   required
                 />
-                <label for="username">Username</label>
+                <label for="username">Email</label>
               </div>
               <div class="form-floating mb-4">
                 <input
@@ -46,56 +67,24 @@
               <button type="submit" class="btn btn-primary w-100 mb-3">
                 Sign In
               </button>
-            </form>
-            <div class="text-center">
-              <a href="#" class="text-primary" @click.prevent="switchModal('forgot')">
-                Forgot your password?
-              </a>
-              <p class="mt-3 mb-0">
+              <p class="text-center">
                 Don't have an account? 
-                <a href="#" class="text-primary" @click.prevent="switchModal('signup')">Sign Up</a>
+                <a
+                  href="#"
+                  class="text-primary"
+                  @click.prevent="openModal('signup')"
+                >
+                  Sign Up
+                </a>
               </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+            </form>
 
-    <!-- Modal Sign Up -->
-    <div v-if="showSignUp" class="modal fade" :class="{'show': showSignUp}" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered animate__animated" :class="modalAnimation">
-        <div class="modal-content">
-          <div class="modal-header border-0">
-            <h5 class="modal-title">Create Account</h5>
-            <button type="button" class="btn-close" @click="closeAllModals"></button>
-          </div>
-          <div class="modal-body p-4">
-            <form @submit.prevent="submitSignUp">
+            <!-- Sign Up Form -->
+            <form
+              v-if="currentModal === 'signup'"
+              @submit.prevent="submitSignUp"
+            >
               <div class="row">
-                <div class="col-md-6">
-                  <div class="form-floating mb-3">
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="signupUsername"
-                      placeholder="Username"
-                      v-model="signupUsername"
-                      required
-                    />
-                    <label for="signupUsername">Username</label>
-                  </div>
-                  <div class="form-floating mb-3">
-                    <input
-                      type="password"
-                      class="form-control"
-                      id="signupPassword"
-                      placeholder="Password"
-                      v-model="signupPassword"
-                      required
-                    />
-                    <label for="signupPassword">Password</label>
-                  </div>
-                </div>
                 <div class="col-md-6">
                   <div class="form-floating mb-3">
                     <input
@@ -120,63 +109,44 @@
                     <label for="signupEmail">Email</label>
                   </div>
                 </div>
+                <div class="col-md-6">
+                  <div class="form-floating mb-3">
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="signupUsername"
+                      placeholder="Username"
+                      v-model="signupUsername"
+                      required
+                    />
+                    <label for="signupUsername">Username</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="signupPassword"
+                      placeholder="Password"
+                      v-model="signupPassword"
+                      required
+                    />
+                    <label for="signupPassword">Password</label>
+                  </div>
+                </div>
               </div>
               <button type="submit" class="btn btn-primary w-100 mb-3">
                 Create Account
               </button>
-              <div class="text-center">
-                <p class="mb-0">
-                  Already have an account? 
-                  <a href="#" class="text-primary" @click.prevent="switchModal('signin')">Sign In</a>
-                </p>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal Forgot Password -->
-    <div v-if="showForgotPassword" class="modal fade" :class="{'show': showForgotPassword}" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered animate__animated" :class="modalAnimation">
-        <div class="modal-content">
-          <div class="modal-header border-0">
-            <h5 class="modal-title">Reset Password</h5>
-            <button type="button" class="btn-close" @click="closeAllModals"></button>
-          </div>
-          <div class="modal-body p-4">
-            <form @submit.prevent="submitForgotPassword">
-              <div class="form-floating mb-3">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="forgotUsername"
-                  placeholder="Username"
-                  v-model="forgotUsername"
-                  required
-                />
-                <label for="forgotUsername">Username</label>
-              </div>
-              <div class="form-floating mb-3">
-                <input
-                  type="email"
-                  class="form-control"
-                  id="forgotEmail"
-                  placeholder="Email"
-                  v-model="forgotEmail"
-                  required
-                />
-                <label for="forgotEmail">Email</label>
-              </div>
-              <button type="submit" class="btn btn-primary w-100 mb-3">
-                Reset Password
-              </button>
-              <div class="text-center">
-                <p class="mb-0">
-                  Remember your password? 
-                  <a href="#" class="text-primary" @click.prevent="switchModal('signin')">Sign In</a>
-                </p>
-              </div>
+              <p class="text-center">
+                Already have an account? 
+                <a
+                  href="#"
+                  class="text-primary"
+                  @click.prevent="openModal('signin')"
+                >
+                  Sign In
+                </a>
+              </p>
             </form>
           </div>
         </div>
@@ -186,85 +156,80 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
+  name: "SignIn", // Đặt tên component cho SignIn
   data() {
     return {
-      username: "",
+      // Common
+      showModal: false,
+      currentModal: "signin", // "signin" or "signup"
+      modalAnimation: "animate__fadeInUp",
+      errorMessage: "",
+
+      // Sign In
+      email: "",
       password: "",
-      signupUsername: "",
-      signupPassword: "",
+
+      // Sign Up
       signupFullname: "",
       signupEmail: "",
-      forgotUsername: "",
-      forgotEmail: "",
-      error: "",
-      showSignIn: false,
-      showSignUp: false,
-      showForgotPassword: false,
-      modalAnimation: 'animate__fadeInUp',
+      signupUsername: "",
+      signupPassword: "",
     };
   },
-  methods: {
-    closeAllModals() {
-      this.showSignIn = false;
-      this.showSignUp = false;
-      this.showForgotPassword = false;
-    },
-    switchModal(type) {
-      this.modalAnimation = 'animate__fadeInRight';
-      
-      // Đóng modal hiện tại
-      this.closeAllModals();
-      
-      // Mở modal mới sau 300ms để có animation đẹp
-      setTimeout(() => {
-        switch(type) {
-          case 'signin':
-            this.showSignIn = true;
-            break;
-          case 'signup':
-            this.showSignUp = true;
-            break;
-          case 'forgot':
-            this.showForgotPassword = true;
-            break;
-        }
-      }, 300);
-    },
-    submitLogin() {
-      console.log("Logging in:", this.username, this.password);
-    },
-    submitSignUp() {
-      console.log(
-        "Signing up:",
-        this.signupUsername,
-        this.signupPassword,
-        this.signupFullname,
-        this.signupEmail
-      );
-      this.closeAllModals();
-    },
-    submitForgotPassword() {
-      console.log(
-        "Forgot Password for:",
-        this.forgotUsername,
-        this.forgotEmail
-      );
-      this.closeAllModals();
+  computed: {
+    modalTitle() {
+      return this.currentModal === "signin" ? "Sign In" : "Create Account";
     },
   },
-  name: "SigninPage",
+  methods: {
+    openModal(type) {
+      this.currentModal = type;
+      this.showModal = true;
+    },
+    closeModal() {
+      this.showModal = false;
+      this.errorMessage = "";
+    },
+    async submitSignIn() {
+      try {
+        const response = await axios.post(
+          "http://localhost:8080/api/user/login",
+          { email: this.email, matKhau: this.password }
+        );
+        console.log("Login successful:", response.data);
+        localStorage.setItem("userInfo", JSON.stringify(response.data));
+        this.closeModal();
+      } catch (error) {
+        this.errorMessage =
+          error.response?.data?.message || "Invalid email or password.";
+      }
+    },
+    async submitSignUp() {
+      try {
+        const response = await axios.post(
+          "http://localhost:8080/api/user/register",
+          {
+            hoTen: this.signupFullname,
+            email: this.signupEmail,
+            matKhau: this.signupPassword,
+          }
+        );
+        console.log("Sign-up successful:", response.data);
+        this.closeModal();
+        alert("Account created successfully!");
+      } catch (error) {
+        this.errorMessage =
+          error.response?.data?.message || "Failed to create account.";
+      }
+    },
+  },
 };
 </script>
 
 <style scoped>
-/* Add these imports in your main.js or index.html */
-/* 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
-*/
-
 .page-wrapper {
   min-height: 100vh;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);

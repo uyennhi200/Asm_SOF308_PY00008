@@ -2,62 +2,22 @@
   <section class="slider mt-4">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-lg-4 col-md-6 mb-4">
+        <!-- Slider code giữ nguyên -->
+        <div class="col-lg-4 col-md-6 mb-4" v-for="(blog, index) in sliderBlogs" :key="index">
           <div class="slider-item-content">
             <div class="post-thumb mb-4">
-              <a href="/detail">
-                <img src="images/slider/slider1.jpg" alt="" class="img-fluid" />
-              </a>
+              <router-link :to="`/detail/${blog.id}`">
+                <img :src="blog.image" alt="" class="img-fluid" />
+              </router-link>
             </div>
             <div class="slider-post-content">
-              <span
-                class="cat-name text-color font-sm font-extra text-uppercase letter-spacing"
-                >Lifestyle</span
-              >
+              <span class="cat-name text-color font-sm font-extra text-uppercase letter-spacing">
+                {{ blog.category }}
+              </span>
               <h3 class="post-title mt-1">
-                <a href="blog-single.html">Tips for Taking a Long-term Trip</a>
+                <router-link :to="`/detail/${blog.id}`">{{ blog.title }}</router-link>
               </h3>
-              <span class="text-muted text-capitalize">January 2, 2019</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 mb-4">
-          <div class="slider-item-content">
-            <div class="post-thumb mb-4">
-              <a href="blog-single.html">
-                <img src="images/slider/slider2.jpg" alt="" class="img-fluid" />
-              </a>
-            </div>
-            <div class="slider-post-content">
-              <span
-                class="cat-name text-color font-sm font-extra text-uppercase letter-spacing"
-                >Travel</span
-              >
-              <h3 class="post-title mt-1">
-                <a href="blog-single.html">Trip to California</a>
-              </h3>
-              <span class="text-muted text-capitalize">September 15, 2019</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 mb-4">
-          <div class="slider-item-content">
-            <div class="post-thumb mb-4">
-              <a href="blog-single.html">
-                <img src="images/slider/slider3.jpg" alt="" class="img-fluid" />
-              </a>
-            </div>
-            <div class="slider-post-content">
-              <span
-                class="cat-name text-color font-sm font-extra text-uppercase letter-spacing"
-                >Weekends</span
-              >
-              <h3 class="post-title mt-1">
-                <a href="blog-single.html">Our Favorite Weekend Getaways</a>
-              </h3>
-              <span class="text-muted text-capitalize">June 12, 2019</span>
+              <span class="text-muted text-capitalize">{{ formatDate(blog.date) }}</span>
             </div>
           </div>
         </div>
@@ -68,305 +28,37 @@
   <section class="section-padding">
     <div class="container">
       <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-          <div class="row">
-            <div class="col-lg-3 col-md-6">
-              <article class="post-grid mb-5">
-                <a class="post-thumb mb-4 d-block" href="blog-single.html">
-                  <img
-                    src="images/news/f1.jpg"
-                    alt=""
-                    class="img-fluid w-100"
-                  />
-                </a>
-                <span
-                  class="cat-name text-color font-extra text-sm text-uppercase letter-spacing-1"
-                  >Explore</span
-                >
-                <h3 class="post-title mt-1">
-                  <a href="blog-single.html"
-                    >The best place to explore to enjoy</a
-                  >
-                </h3>
-
-                <span class="text-muted letter-spacing text-uppercase font-sm"
-                  >June 15, 2019</span
-                >
-              </article>
-            </div>
-            <div class="col-lg-3 col-md-6">
-              <article class="post-grid mb-5">
-                <a class="post-thumb mb-4 d-block" href="blog-single.html">
-                  <img
-                    src="images/news/f2.jpg"
-                    alt=""
-                    class="img-fluid w-100"
-                  />
-                </a>
-                <span
-                  class="cat-name text-color font-sm font-extra text-uppercase letter-spacing"
-                  >Lifestyle</span
-                >
-                <h3 class="post-title mt-1">
-                  <a href="blog-single.html"
-                    >How to Make list for travelling alone</a
-                  >
-                </h3>
-
-                <span class="text-muted letter-spacing text-uppercase font-sm"
-                  >September 15, 2019</span
-                >
-              </article>
-            </div>
-            <div class="col-lg-3 col-md-6">
-              <article class="post-grid mb-5">
-                <a class="post-thumb mb-4 d-block" href="blog-single.html">
-                  <img
-                    src="images/news/f3.jpg"
-                    alt=""
-                    class="img-fluid w-100"
-                  />
-                </a>
-                <span
-                  class="cat-name text-color font-sm font-extra text-uppercase letter-spacing"
-                  >Food</span
-                >
-                <h3 class="post-title mt-1">
-                  <a href="blog-single.html"
-                    >5 ingredient cilantro vinaigrette</a
-                  >
-                </h3>
-
-                <span class="text-muted letter-spacing text-uppercase font-sm"
-                  >September 15, 2019</span
-                >
-              </article>
-            </div>
-            <div class="col-lg-3 col-md-6">
-              <article class="post-grid mb-5">
-                <a class="post-thumb mb-4 d-block" href="blog-single.html">
-                  <img
-                    src="images/news/f4.jpg"
-                    alt=""
-                    class="img-fluid w-100"
-                  />
-                </a>
-                <span
-                  class="cat-name text-color font-sm font-extra text-uppercase letter-spacing"
-                  >Explore</span
-                >
-                <h3 class="post-title mt-1">
-                  <a href="blog-single.html"
-                    >A Simple Way to Feel Like Home When You Travel</a
-                  >
-                </h3>
-
-                <span class="text-muted letter-spacing text-uppercase font-sm"
-                  >March 20, 2019</span
-                >
-              </article>
-            </div>
-            <div class="col-lg-3 col-md-6">
-              <article class="post-grid mb-5">
-                <a class="post-thumb mb-4 d-block" href="blog-single.html">
-                  <img
-                    src="images/news/f5.jpg"
-                    alt=""
-                    class="img-fluid w-100"
-                  />
-                </a>
-                <span
-                  class="cat-name text-color font-sm font-extra text-uppercase letter-spacing"
-                  >Travel</span
-                >
-                <h3 class="post-title mt-1">
-                  <a href="blog-single.html">What Type of Traveller Are You?</a>
-                </h3>
-
-                <span class="text-muted letter-spacing text-uppercase font-sm"
-                  >September 15, 2019</span
-                >
-              </article>
-            </div>
-            <div class="col-lg-3 col-md-6">
-              <article class="post-grid mb-5">
-                <a class="post-thumb mb-4 d-block" href="blog-single.html">
-                  <img
-                    src="images/news/f6.jpg"
-                    alt=""
-                    class="img-fluid w-100"
-                  />
-                </a>
-                <span
-                  class="cat-name text-color font-sm font-extra text-uppercase letter-spacing"
-                  >Experience</span
-                >
-                <h3 class="post-title mt-1">
-                  <a href="blog-single.html">A Road Trip Review of the 2018</a>
-                </h3>
-
-                <span class="text-muted letter-spacing text-uppercase font-sm"
-                  >July 10, 2019</span
-                >
-              </article>
-            </div>
-            <div class="col-lg-3 col-md-6">
-              <article class="post-grid mb-5">
-                <a class="post-thumb mb-4 d-block" href="blog-single.html">
-                  <img
-                    src="images/news/f7.jpg"
-                    alt=""
-                    class="img-fluid w-100"
-                  />
-                </a>
-                <span
-                  class="cat-name text-color font-sm font-extra text-uppercase letter-spacing"
-                  >music</span
-                >
-                <h3 class="post-title mt-1">
-                  <a href="blog-single.html"
-                    >Portugal’s Sunset summer vission</a
-                  >
-                </h3>
-
-                <span class="text-muted letter-spacing text-uppercase font-sm"
-                  >September 15, 2019</span
-                >
-              </article>
-            </div>
-            <div class="col-lg-3 col-md-6">
-              <article class="post-grid mb-5">
-                <a class="post-thumb mb-4 d-block" href="blog-single.html">
-                  <img
-                    src="images/news/f8.jpg"
-                    alt=""
-                    class="img-fluid w-100"
-                  />
-                </a>
-                <span
-                  class="cat-name text-color font-sm font-extra text-uppercase letter-spacing"
-                  >beauty</span
-                >
-                <h3 class="post-title mt-1">
-                  <a href="blog-single.html">The best soft Tropical Getaway</a>
-                </h3>
-
-                <span class="text-muted letter-spacing text-uppercase font-sm"
-                  >March 12, 2019</span
-                >
-              </article>
-            </div>
-            <div class="col-lg-3 col-md-6">
-              <article class="post-grid mb-5">
-                <a class="post-thumb mb-4 d-block" href="blog-single.html">
-                  <img
-                    src="images/news/f9.jpg"
-                    alt=""
-                    class="img-fluid w-100"
-                  />
-                </a>
-                <span
-                  class="cat-name text-color font-sm font-extra text-uppercase letter-spacing"
-                  >Travel</span
-                >
-                <h3 class="post-title mt-1">
-                  <a href="blog-single.html">Memoriable Paris Girls Trip </a>
-                </h3>
-
-                <span class="text-muted letter-spacing text-uppercase font-sm"
-                  >April 19, 2019</span
-                >
-              </article>
-            </div>
-            <div class="col-lg-3 col-md-6">
-              <article class="post-grid mb-5">
-                <a class="post-thumb mb-4 d-block" href="blog-single.html">
-                  <img
-                    src="images/news/f10.jpg"
-                    alt=""
-                    class="img-fluid w-100"
-                  />
-                </a>
-                <span
-                  class="cat-name text-color font-sm font-extra text-uppercase letter-spacing"
-                  >Experience</span
-                >
-                <h3 class="post-title mt-1">
-                  <a href="blog-single.html"
-                    >How to Plan your Trip the Right Way</a
-                  >
-                </h3>
-
-                <span class="text-muted letter-spacing text-uppercase font-sm"
-                  >February 15, 2019</span
-                >
-              </article>
-            </div>
-
-            <div class="col-lg-3 col-md-6">
-              <article class="post-grid mb-5">
-                <a class="post-thumb mb-4 d-block" href="blog-single.html">
-                  <img
-                    src="images/news/f11.jpg"
-                    alt=""
-                    class="img-fluid w-100"
-                  />
-                </a>
-                <span
-                  class="cat-name text-color font-sm font-extra text-uppercase letter-spacing"
-                  >Travel</span
-                >
-                <h3 class="post-title mt-1">
-                  <a href="blog-single.html"
-                    >8 Powerful Ways to Add Vibrant Colour to Your Life</a
-                  >
-                </h3>
-
-                <span class="text-muted letter-spacing text-uppercase font-sm"
-                  >August 15, 2019</span
-                >
-              </article>
-            </div>
-            <div class="col-lg-3 col-md-6">
-              <article class="post-grid mb-5">
-                <a class="post-thumb mb-4 d-block" href="blog-single.html">
-                  <img
-                    src="images/news/f12.jpg"
-                    alt=""
-                    class="img-fluid w-100"
-                  />
-                </a>
-                <span
-                  class="cat-name text-color font-sm font-extra text-uppercase letter-spacing"
-                  >Lifestyle</span
-                >
-                <h3 class="post-title mt-1">
-                  <a href="blog-single.html"
-                    >The best to-do list to help boost your productivity</a
-                  >
-                </h3>
-
-                <span class="text-muted letter-spacing text-uppercase font-sm"
-                  >October 2, 2019</span
-                >
-              </article>
-            </div>
-          </div>
+        <!-- Danh sách bài viết -->
+        <div class="col-lg-3 col-md-6" v-for="(blog, index) in blogs" :key="index">
+          <article class="post-grid mb-5">
+            <router-link class="post-thumb mb-4 d-block" :to="`/detail/${blog.id}`">
+              <img :src="blog.image" alt="" class="img-fluid w-100" />
+            </router-link>
+            <span class="cat-name text-color font-sm font-extra text-uppercase letter-spacing">
+              {{ blog.category }}
+            </span>
+            <h3 class="post-title mt-1">
+              <router-link :to="`/detail/${blog.id}`">{{ blog.title }}</router-link>
+            </h3>
+            <span class="text-muted letter-spacing text-uppercase font-sm">
+              {{ formatDate(blog.date) }}
+            </span>
+          </article>
         </div>
+      </div>
 
-        <div class="m-auto">
-          <div class="pagination mt-5 pt-4">
-            <ul class="list-inline">
-              <li class="list-inline-item"><a href="#" class="active">1</a></li>
-              <li class="list-inline-item"><a href="#">2</a></li>
-              <li class="list-inline-item"><a href="#">3</a></li>
-              <li class="list-inline-item">
-                <a href="#" class="prev-posts"
-                  ><i class="ti-arrow-right"></i
-                ></a>
-              </li>
-            </ul>
-          </div>
+      <!-- Pagination -->
+      <div class="m-auto">
+        <div class="pagination mt-5 pt-4">
+          <ul class="list-inline">
+            <li class="list-inline-item">
+              <button @click="prevPage" :disabled="currentPage === 0" class="btn btn-link">Previous</button>
+            </li>
+            <li class="list-inline-item">{{ currentPage + 1 }} / {{ totalPages }}</li>
+            <li class="list-inline-item">
+              <button @click="nextPage" :disabled="currentPage === totalPages - 1" class="btn btn-link">Next</button>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
@@ -374,8 +66,56 @@
 </template>
 
 <script>
+import { ref, onMounted } from "vue";
+import axios from "axios";
+
 export default {
   name: "IndexPage",
+  setup() {
+    const blogs = ref([]);
+    const sliderBlogs = ref([]);
+    const loading = ref(true);  
+    const currentPage = ref(0);
+    const totalPages = ref(0);
+
+    const loadBlogs = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/api/blogs?page=${currentPage.value}`
+        );
+        blogs.value = response.data.content;
+        sliderBlogs.value = blogs.value.slice(0, 3); // Chọn 3 bài đầu làm slider
+        totalPages.value = response.data.totalPages;
+      } catch (error) {
+        console.error("Error loading blogs:", error);
+      } finally {
+        loading.value = false;
+      }
+    };
+
+    const nextPage = async () => {
+      if (currentPage.value < totalPages.value - 1) {
+        currentPage.value++;
+        await loadBlogs();
+      }
+    };
+
+    const prevPage = async () => {
+      if (currentPage.value > 0) {
+        currentPage.value--;
+        await loadBlogs();
+      }
+    };
+
+    const formatDate = (date) => {
+      const options = { year: "numeric", month: "short", day: "numeric" };
+      return new Date(date).toLocaleDateString(undefined, options);
+    };
+
+    onMounted(loadBlogs);
+
+    return { blogs, sliderBlogs, loading, currentPage, totalPages, nextPage, prevPage, formatDate };
+  },
 };
 </script>
 
@@ -398,5 +138,4 @@ export default {
   color: #555;
   font-weight: bold;
 }
-
 </style>
