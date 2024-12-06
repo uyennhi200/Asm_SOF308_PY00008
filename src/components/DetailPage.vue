@@ -1,4 +1,4 @@
-<template>
+<!--<template>
   <section class="single-block-wrapper section-padding">
         <div class="container">
             <div class="row justify-content-center">
@@ -246,4 +246,4 @@ export default {
 
 <style>
 
-</style>
+</style>-->

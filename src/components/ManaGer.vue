@@ -1,248 +1,323 @@
 <template>
-  <div>
-    <!-- Form CRUD -->
-    <form @submit.prevent="handleSubmit" class="p-4 border rounded shadow-sm bg-light">
-      <h4 class="text-center mb-4">{{ form.id ? 'Edit Article' : 'Add New Article' }}</h4>
-
-      <!-- Hidden ID Field -->
-      <div class="mb-3" v-if="form.id">
-        <label class="form-label">Article ID:</label>
-        <input type="text" class="form-control" v-model="form.id" readonly>
+  <div class="blog-management bg-light-pastel">
+    <section id="profile" class="profile section bg-pastel-pink">
+      <div class="container">
+        <div class="text-center my-5">
+          <h1 class="fw-bolder text-dark-pastel">Quản lý Bài viết</h1>
+        </div>
       </div>
+    </section>
 
-      <!-- Title Field -->
-      <div class="mb-3">
-        <label class="form-label">Title:</label>
-        <input type="text" class="form-control" v-model="form.title" required placeholder="Enter article title">
+    <div class="container py-4">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-10">
+          <div class="card shadow-sm border-pastel mb-4">
+            <div class="card-body bg-light-blue">
+              <form 
+                @submit.prevent="isEditing ? editBlog() : addBlog()" 
+                class="col-12"
+              >
+                <div class="mb-3">
+                  <label for="tieuDe" class="form-label text-pastel-dark">Tiêu đề</label>
+                  <input
+                    v-model="tieuDe"
+                    type="text"
+                    class="form-control form-control-lg bg-white border-pastel"
+                    id="tieuDe"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="noiDung" class="form-label text-pastel-dark">Nội dung</label>
+                  <textarea
+                    v-model="noiDung"
+                    class="form-control form-control-lg bg-white border-pastel"
+                    id="noiDung"
+                    rows="5"
+                    required
+                  ></textarea>
+                </div>
+                <div class="mb-3">
+                  <label for="hinh" class="form-label text-pastel-dark">Hình ảnh</label>
+                  <input
+                    @change="handleFileChange"
+                    type="file"
+                    class="form-control form-control-lg bg-white border-pastel"
+                    id="hinh"
+                    accept="image/*"
+                  />
+                </div>
+
+                <div class="d-flex gap-2">
+                  <button 
+                    type="submit" 
+                    class="btn btn-pastel-green"
+                  >
+                    {{ isEditing ? "Cập nhật" : "Thêm" }}
+                  </button>
+                  <button
+                    type="reset"
+                    @click="cancelEdit"
+                    class="btn btn-pastel-pink"
+                    v-if="isEditing"
+                  >
+                    Hủy
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="card shadow-sm border-pastel">
+            <div class="card-body bg-light-blue">
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead class="bg-pastel-blue">
+                    <tr>
+                      <th scope="col" class="text-pastel-dark">STT</th>
+                      <th scope="col" class="text-pastel-dark">Tiêu đề</th>
+                      <th scope="col" class="text-pastel-dark">Nội dung</th>
+                      <th scope="col" class="text-pastel-dark">Hình</th>
+                      <th colspan="2" class="text-pastel-dark text-center">Hành động</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr 
+                      v-for="(blog, index) in blogs" 
+                      :key="blog.ma" 
+                      class="bg-white"
+                    >
+                      <td>{{ index + 1 }}</td>
+                      <td>{{ blog.tieuDe }}</td>
+                      <td>{{ blog.noiDung.substring(0, 100) }}...</td>
+                      <td>
+                        <img
+                          :src="`http://localhost:8080/api/image/uploads/${blog.anh}`"
+                          class="img-thumbnail rounded blog-image"
+                          alt="Blog Image"
+                        />
+                      </td>
+                      <td>
+                        <button 
+                          @click="editBlogForm(blog.ma)" 
+                          class="btn btn-pastel-yellow btn-sm"
+                        >
+                          Sửa
+                        </button>
+                      </td>
+                      <td>
+                        <button 
+                          @click="deleteBlog(blog.ma)" 
+                          class="btn btn-pastel-red btn-sm"
+                        >
+                          Xóa
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-
-      <!-- Category Select -->
-      <div class="mb-3">
-        <label class="form-label">Category:</label>
-        <select v-model="form.categoryId" class="form-select" required>
-          <option disabled value="">Please Select Category*</option>
-          <option v-for="category in categories" :key="category.idCategories" :value="category.idCategories">
-            {{ category.names }}
-          </option>
-        </select>
-      </div>
-
-      <!-- Content Field -->
-      <div class="mb-3">
-        <label class="form-label">Content:</label>
-        <textarea rows="5" class="form-control" v-model="form.content" required placeholder="Enter article content"></textarea>
-      </div>
-
-      <!-- Posted Date Field -->
-      <div class="mb-3">
-        <label class="form-label">Posted Date:</label>
-        <input type="date" class="form-control" v-model="form.postedDate" required>
-      </div>
-
-      <!-- Image Upload -->
-      <div class="mb-3">
-        <label class="form-label">Image:</label>
-        <input name="image" type="file" class="form-control" @change="handleFileUpload">
-      </div>
-
-      <!-- Checkbox for Home -->
-      <div class="form-check mb-3">
-        <input type="checkbox" class="form-check-input" v-model="form.home">
-        <label class="form-check-label">Post to the front page?</label>
-      </div>
-
-      <!-- Action Buttons -->
-      <div class="text-center mt-4">
-        <button v-if="!form.id" @click="createArticle" type="submit" class="btn btn-success mx-1">Add</button>
-        <button v-if="form.id" @click="updateArticle" type="submit" class="btn btn-info mx-1">Update</button>
-        <button @click="deleteArticle" v-if="form.id" type="button" class="btn btn-danger mx-1">Delete</button>
-        <button @click="resetForm" type="button" class="btn btn-secondary mx-1">Reset</button>
-      </div>
-    </form>
-
-    <hr class="my-4">
-
-    <!-- Table Display Articles -->
-    <h4 class="text-center mb-4">Articles List</h4>
-    <table class="table table-striped table-bordered">
-      <thead class="table-dark">
-        <tr>
-          <th>STT</th>
-          <th>Title</th>
-          <th>Posted Date</th>
-          <th>Category</th>
-          <th>Front page?</th>
-          <th>Edit</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-if="articles.length === 0">
-          <td colspan="6" class="text-center">No articles available</td>
-        </tr>
-        <tr v-for="(article, index) in articles" :key="article.id">
-          <td>{{ index + 1 }}</td>
-          <td>{{ article.title }}</td>
-          <td>{{ article.postedDate }}</td>
-          <td>{{ article.category.names }}</td>
-          <td>{{ article.home ? 'Yes' : 'No' }}</td>
-          <td>
-            <button @click="editArticle(article)" class="btn btn-sm btn-info">Edit</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    </div>
   </div>
 </template>
 
+<script setup>
+// Toàn bộ script giữ nguyên từ code ban đầu
+import { ref, onMounted } from "vue";
+import axios from "axios";
 
-<script>
-import axios from 'axios';
+const blogs = ref([]);
+const tieuDe = ref("");
+const noiDung = ref("");
+const hinh = ref(null);
+const isEditing = ref(false);
+const editingBlogId = ref(null);
 
-export default {
-  name: 'ArticleManager',
-  data() {
-    return {
-      articles: [], // Danh sách bài viết
-      categories: [], // Danh sách thể loại
-      form: {
-        id: null,
-        title: '',
-        content: '',
-        categoryId: '',
-        home: false,
-        image: null, // Dùng để upload file
-      },
-    };
-  },
-  methods: {
-    // Fetch danh sách bài viết và thể loại từ API
-    async fetchData() {
-      try {
-        const articlesResponse = await axios.get('http://localhost:8081/api/articles');
-        const categoriesResponse = await axios.get('http://localhost:8081/api/categories');
-        this.articles = articlesResponse.data;
-        this.categories = categoriesResponse.data;
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    },
-    // Xử lý file upload
-    handleFileUpload(event) {
-      const file = event.target.files[0];
-      this.form.image = file;
-    },
-    // Reset form
-    resetForm() {
-      this.form = {
-        id: null,
-        title: '',
-        content: '',
-        categoryId: '',
-        home: false,
-        image: null,
-      };
-    },
-    // Thêm bài viết mới
-    async createArticle() {
-      try {
-        const formData = new FormData();
-        formData.append('title', this.form.title);
-        formData.append('content', this.form.content);
-        formData.append('categoryId', this.form.categoryId);
-        formData.append('home', this.form.home);
-        if (this.form.image) {
-          formData.append('image', this.form.image);
-        }
+const data = localStorage.getItem("userInfo");
+const parsedData = JSON.parse(data);
+const savedEmail = parsedData?.email;
 
-        await axios.post('http://localhost:8081/api/articles', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-        alert('Article added successfully!');
-        this.fetchData(); // Làm mới danh sách
-        this.resetForm(); // Xóa dữ liệu form
-      } catch (error) {
-        console.error('Error creating article:', error);
-      }
-    },
-    // Cập nhật bài viết
-    async updateArticle() {
-      if (!this.form.id) {
-        alert('Please select an article to edit!');
-        return;
-      }
+onMounted(async () => {
+  if (savedEmail) {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/api/blogs/user/${savedEmail}`
+      );
+      blogs.value = response.data;
+    } catch (error) {
+      console.error("Lỗi khi lấy dữ liệu bài viết:", error);
+    }
+  } else {
+    console.log("Email không tồn tại trong localStorage");
+  }
+});
 
-      try {
-        const formData = new FormData();
-        formData.append('title', this.form.title);
-        formData.append('content', this.form.content);
-        formData.append('categoryId', this.form.categoryId);
-        formData.append('home', this.form.home);
-        if (this.form.image) {
-          formData.append('image', this.form.image);
-        }
+const addBlog = async () => {
+  try {
+    const formData = new FormData();
+    formData.append("email", savedEmail);
+    formData.append("tieuDe", tieuDe.value);
+    formData.append("noiDung", noiDung.value);
+    if (hinh.value) {
+      formData.append("file", hinh.value);
+    }
 
-        await axios.put(`http://localhost:8081/api/articles/${this.form.id}`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-        alert('Article updated successfully!');
-        this.fetchData();
-        this.resetForm();
-      } catch (error) {
-        console.error('Error updating article:', error);
-      }
-    },
-    // Xóa bài viết
-    async deleteArticle() {
-      if (!this.form.id) {
-        alert('Please select an article to delete!');
-        return;
-      }
+    console.log(hinh.value);
 
-      try {
-        await axios.delete(`http://localhost:8081/api/articles/${this.form.id}`);
-        alert('Article deleted successfully!');
-        this.fetchData();
-        this.resetForm();
-      } catch (error) {
-        console.error('Error deleting article:', error);
+    const response = await axios.post(
+      "http://localhost:8080/api/blogs/add",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       }
-    },
-    // Điền thông tin bài viết vào form để sửa
-    editArticle(article) {
-      this.form = { ...article, categoryId: article.category.idCategories };
-    },
-  },
-  async mounted() {
-    await this.fetchData(); // Tải dữ liệu khi component được gắn vào
-  },
+    );
+
+    if (response.status === 200) {
+      alert("Thêm bài viết thành công!");
+      blogs.value.push(response.data);
+      tieuDe.value = "";
+      noiDung.value = "";
+      hinh.value = null;
+    }
+  } catch (error) {
+    console.error("Lỗi khi thêm bài viết:", error);
+    alert("Có lỗi xảy ra khi thêm bài viết.");
+  }
+};
+
+const editBlogForm = (blogId) => {
+  const blogToEdit = blogs.value.find((blog) => blog.ma === blogId);
+  if (blogToEdit) {
+    tieuDe.value = blogToEdit.tieuDe;
+    noiDung.value = blogToEdit.noiDung;
+    hinh.value = null;
+    isEditing.value = true;
+    editingBlogId.value = blogId;
+  }
+};
+
+const editBlog = async () => {
+  try {
+    const formData = new FormData();
+    formData.append("email", savedEmail);
+    formData.append("tieuDe", tieuDe.value);
+    formData.append("noiDung", noiDung.value);
+    if (hinh.value) {
+      formData.append("file", hinh.value);
+    }
+
+    const response = await axios.put(
+      `http://localhost:8080/api/blogs/update/${editingBlogId.value}`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    if (response.status === 200) {
+      alert("Sửa bài viết thành công!");
+      const index = blogs.value.findIndex(
+        (blog) => blog.ma === editingBlogId.value
+      );
+      if (index !== -1) {
+        blogs.value[index] = response.data;
+      }
+      isEditing.value = false;
+      tieuDe.value = "";
+      noiDung.value = "";
+      hinh.value = null;
+    }
+  } catch (error) {
+    console.error("Lỗi khi sửa bài viết:", error);
+    alert("Có lỗi xảy ra khi sửa bài viết.");
+  }
+};
+
+const cancelEdit = () => {
+  isEditing.value = false;
+  tieuDe.value = "";
+  noiDung.value = "";
+  hinh.value = null;
+};
+
+const deleteBlog = async (blogId) => {
+  const confirmDelete = confirm("Bạn có chắc chắn muốn xóa bài viết này?");
+  if (confirmDelete) {
+    try {
+      const response = await axios.delete(
+        `http://localhost:8080/api/blogs/${blogId}`
+      );
+      if (response.status === 200) {
+        alert("Xóa bài viết thành công!");
+        blogs.value = blogs.value.filter((blog) => blog.ma !== blogId);
+      }
+    } catch (error) {
+      console.error("Lỗi khi xóa bài viết:", error);
+      alert("Có lỗi xảy ra khi xóa bài viết.");
+    }
+  }
+};
+
+const handleFileChange = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    hinh.value = file;
+  }
 };
 </script>
 
-<style>
-.form-label {
-  font-weight: bold;
+<style scoped>
+:root {
+  --pastel-pink: #FFB6C1;
+  --pastel-blue: #87CEFA;
+  --pastel-green: #98FB98;
+  --pastel-yellow: #FFFFE0;
+  --pastel-red: #FFA07A;
+  
+  --light-pastel: #F0F8FF;
+  --light-blue: #E6F2FF;
+  --pastel-dark: #4A4A4A;
 }
 
-.form-control,
-.form-select {
-  border-radius: 8px;
+.bg-pastel-pink { background-color: var(--pastel-pink) !important; }
+.bg-pastel-blue { background-color: var(--pastel-blue) !important; }
+.bg-light-pastel { background-color: var(--light-pastel) !important; }
+.bg-light-blue { background-color: var(--light-blue) !important; }
+
+.text-pastel-dark { color: var(--pastel-dark) !important; }
+
+.btn-pastel-green { 
+  background-color: var(--pastel-green);
+  color: var(--pastel-dark);
+}
+.btn-pastel-pink { 
+  background-color: var(--pastel-pink);
+  color: var(--pastel-dark);
+}
+.btn-pastel-yellow { 
+  background-color: var(--pastel-yellow);
+  color: var(--pastel-dark);
+}
+.btn-pastel-red { 
+  background-color: var(--pastel-red);
+  color: var(--pastel-dark);
 }
 
-.btn {
-  min-width: 80px;
+.border-pastel {
+  border: 1px solid var(--pastel-blue);
 }
 
-.table {
-  margin-top: 20px;
-}
-
-.table th,
-.table td {
-  text-align: center;
-  vertical-align: middle;
+.blog-image {
+  max-width: 150px;
+  max-height: 100px;
+  object-fit: cover;
 }
 </style>

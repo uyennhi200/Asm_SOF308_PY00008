@@ -30,17 +30,17 @@
                 <li class="nav-item">
                   <router-link class="nav-link" to="/">Home</router-link>
                 </li>
-                <li class="nav-item">
+                <!--<li class="nav-item">
                   <router-link class="nav-link" to="/about">About</router-link>
-                </li>
+                </li>-->
                 <li v-if="isLoggedIn" class="nav-item">
-                  <router-link class="nav-link" to="/managerBlog">Manager</router-link>
+                  <router-link class="nav-link" to="/manager">Manager</router-link>
                 </li>
                 <li class="nav-item">
                   <router-link class="nav-link" to="/contact">Contact</router-link>
                 </li>
                 <li v-if="isLoggedIn" class="nav-item">
-                  <router-link class="nav-link" to="/profile">Profile</router-link>
+                  <router-link class="nav-link" to="/about">Profile</router-link>
                 </li>
                 <li v-if="!isLoggedIn" class="nav-item">
                   <router-link class="nav-link" to="/login">Login</router-link>
