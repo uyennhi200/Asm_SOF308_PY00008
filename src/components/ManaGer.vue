@@ -1,117 +1,126 @@
 <template>
-  <div class="blog-management bg-light-pastel">
-    <section id="profile" class="profile section bg-pastel-pink">
-      <div class="container">
-        <div class="text-center my-5">
-          <h1 class="fw-bolder text-dark-pastel">Quản lý Bài viết</h1>
-        </div>
-      </div>
-    </section>
-
-    <div class="container py-4">
+  <div class="blog-management min-vh-100 bg-soft-pastel">
+    <div class="container py-5">
       <div class="row justify-content-center">
-        <div class="col-12 col-md-10">
-          <div class="card shadow-sm border-pastel mb-4">
-            <div class="card-body bg-light-blue">
+        <div class="col-12 col-lg-10 col-xl-8">
+          <div class="card card-elegant shadow-lg border-0 mb-4">
+            <div class="card-header bg-gradient-pastel text-center py-3">
+              <h2 class="text mb-0 fw-bold">Quản Lý Bài Viết</h2>
+            </div>
+            
+            <div class="card-body p-4">
               <form 
                 @submit.prevent="isEditing ? editBlog() : addBlog()" 
-                class="col-12"
+                class="blog-form"
               >
-                <div class="mb-3">
-                  <label for="tieuDe" class="form-label text-pastel-dark">Tiêu đề</label>
-                  <input
-                    v-model="tieuDe"
-                    type="text"
-                    class="form-control form-control-lg bg-white border-pastel"
-                    id="tieuDe"
-                    required
-                  />
-                </div>
-                <div class="mb-3">
-                  <label for="noiDung" class="form-label text-pastel-dark">Nội dung</label>
-                  <textarea
-                    v-model="noiDung"
-                    class="form-control form-control-lg bg-white border-pastel"
-                    id="noiDung"
-                    rows="5"
-                    required
-                  ></textarea>
-                </div>
-                <div class="mb-3">
-                  <label for="hinh" class="form-label text-pastel-dark">Hình ảnh</label>
-                  <input
-                    @change="handleFileChange"
-                    type="file"
-                    class="form-control form-control-lg bg-white border-pastel"
-                    id="hinh"
-                    accept="image/*"
-                  />
-                </div>
-
-                <div class="d-flex gap-2">
-                  <button 
-                    type="submit" 
-                    class="btn btn-pastel-green"
-                  >
-                    {{ isEditing ? "Cập nhật" : "Thêm" }}
-                  </button>
-                  <button
-                    type="reset"
-                    @click="cancelEdit"
-                    class="btn btn-pastel-pink"
-                    v-if="isEditing"
-                  >
-                    Hủy
-                  </button>
+                <div class="row g-3">
+                  <div class="col-12">
+                    <label for="tieuDe" class="form-label">Tiêu đề</label>
+                    <input
+                      v-model="tieuDe"
+                      type="text"
+                      class="form-control form-control-lg elegant-input"
+                      id="tieuDe"
+                      placeholder="Nhập tiêu đề bài viết"
+                      required
+                    />
+                  </div>
+                  
+                  <div class="col-12">
+                    <label for="noiDung" class="form-label">Nội dung</label>
+                    <textarea
+                      v-model="noiDung"
+                      class="form-control form-control-lg elegant-input"
+                      id="noiDung"
+                      rows="5"
+                      placeholder="Nhập nội dung bài viết"
+                      required
+                    ></textarea>
+                  </div>
+                  
+                  <div class="col-12">
+                    <label for="hinh" class="form-label">Hình ảnh</label>
+                    <input
+                      @change="handleFileChange"
+                      type="file"
+                      class="form-control form-control-lg elegant-input"
+                      id="hinh"
+                      accept="image/*"
+                    />
+                  </div>
+                  
+                  <div class="col-12 d-flex gap-3">
+                    <button 
+                      type="submit" 
+                      class="btn btn-primary flex-grow-1"
+                    >
+                      {{ isEditing ? "Cập Nhật" : "Thêm Bài Viết" }}
+                    </button>
+                    
+                    <button
+                      v-if="isEditing"
+                      type="reset"
+                      @click="cancelEdit"
+                      class="btn btn-secondary flex-grow-1"
+                    >
+                      Hủy
+                    </button>
+                  </div>
                 </div>
               </form>
             </div>
           </div>
 
-          <div class="card shadow-sm border-pastel">
-            <div class="card-body bg-light-blue">
+          <div class="card card-elegant shadow-lg border-0">
+            <div class="card-header bg-gradient-pastel text-center py-3">
+              <h3 class="text-white mb-0 fw-bold">Danh Sách Bài Viết</h3>
+            </div>
+            
+            <div class="card-body p-0">
               <div class="table-responsive">
-                <table class="table table-hover">
-                  <thead class="bg-pastel-blue">
+                <table class="table table-hover mb-0">
+                  <thead>
                     <tr>
-                      <th scope="col" class="text-pastel-dark">STT</th>
-                      <th scope="col" class="text-pastel-dark">Tiêu đề</th>
-                      <th scope="col" class="text-pastel-dark">Nội dung</th>
-                      <th scope="col" class="text-pastel-dark">Hình</th>
-                      <th colspan="2" class="text-pastel-dark text-center">Hành động</th>
+                      <th class="text-center">STT</th>
+                      <th>Tiêu Đề</th>
+                      <th class="d-none d-md-table-cell">Nội Dung</th>
+                      <th>Hình</th>
+                      <th class="text-center">Hành Động</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr 
                       v-for="(blog, index) in blogs" 
                       :key="blog.ma" 
-                      class="bg-white"
+                      class="blog-row"
                     >
-                      <td>{{ index + 1 }}</td>
+                      <td class="text-center">{{ index + 1 }}</td>
                       <td>{{ blog.tieuDe }}</td>
-                      <td>{{ blog.noiDung.substring(0, 100) }}...</td>
+                      <td class="d-none d-md-table-cell">
+                        {{ blog.noiDung.substring(0, 50) }}...
+                      </td>
                       <td>
                         <img
                           :src="`http://localhost:8080/api/image/uploads/${blog.anh}`"
-                          class="img-thumbnail rounded blog-image"
+                          class="blog-thumbnail"
                           alt="Blog Image"
                         />
                       </td>
-                      <td>
-                        <button 
-                          @click="editBlogForm(blog.ma)" 
-                          class="btn btn-pastel-yellow btn-sm"
-                        >
-                          Sửa
-                        </button>
-                      </td>
-                      <td>
-                        <button 
-                          @click="deleteBlog(blog.ma)" 
-                          class="btn btn-pastel-red btn-sm"
-                        >
-                          Xóa
-                        </button>
+                      <td class="text-center">
+                        <div class="btn-group" role="group">
+                          <button 
+                            @click="editBlogForm(blog.ma)" 
+                            class="btn btn-sm btn-warning"
+                          >
+                            Sửa
+                          </button>
+                          <button 
+                            @click="deleteBlog(blog.ma)" 
+                            class="btn btn-sm btn-danger"
+                          >
+                            Xóa
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   </tbody>
@@ -126,10 +135,10 @@
 </template>
 
 <script setup>
-// Toàn bộ script giữ nguyên từ code ban đầu
 import { ref, onMounted } from "vue";
 import axios from "axios";
 
+// Script remains exactly the same as the original
 const blogs = ref([]);
 const tieuDe = ref("");
 const noiDung = ref("");
@@ -276,48 +285,59 @@ const handleFileChange = (event) => {
 
 <style scoped>
 :root {
-  --pastel-pink: #FFB6C1;
-  --pastel-blue: #87CEFA;
-  --pastel-green: #98FB98;
-  --pastel-yellow: #FFFFE0;
-  --pastel-red: #FFA07A;
-  
-  --light-pastel: #F0F8FF;
-  --light-blue: #E6F2FF;
-  --pastel-dark: #4A4A4A;
+  --color-primary: #6a11cb;
+  --color-secondary: #2575fc;
+  --color-background: #f4f5f7;
+  --color-text-dark: #333;
+  --color-text-light: #fff;
 }
 
-.bg-pastel-pink { background-color: var(--pastel-pink) !important; }
-.bg-pastel-blue { background-color: var(--pastel-blue) !important; }
-.bg-light-pastel { background-color: var(--light-pastel) !important; }
-.bg-light-blue { background-color: var(--light-blue) !important; }
-
-.text-pastel-dark { color: var(--pastel-dark) !important; }
-
-.btn-pastel-green { 
-  background-color: var(--pastel-green);
-  color: var(--pastel-dark);
-}
-.btn-pastel-pink { 
-  background-color: var(--pastel-pink);
-  color: var(--pastel-dark);
-}
-.btn-pastel-yellow { 
-  background-color: var(--pastel-yellow);
-  color: var(--pastel-dark);
-}
-.btn-pastel-red { 
-  background-color: var(--pastel-red);
-  color: var(--pastel-dark);
+.bg-soft-pastel {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  background-attachment: fixed;
 }
 
-.border-pastel {
-  border: 1px solid var(--pastel-blue);
+.card-elegant {
+  border-radius: 15px;
+  overflow: hidden;
 }
 
-.blog-image {
-  max-width: 150px;
-  max-height: 100px;
+.bg-gradient-pastel {
+  background: linear-gradient(45deg, var(--color-primary), var(--color-secondary));
+}
+
+.elegant-input {
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.elegant-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 4px 6px rgba(106, 17, 203, 0.2);
+}
+
+.blog-thumbnail {
+  width: 100px;
+  height: 70px;
   object-fit: cover;
+  border-radius: 8px;
+}
+
+.blog-row {
+  transition: background-color 0.3s ease;
+}
+
+.blog-row:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.table thead {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.btn-group .btn {
+  padding: 0.25rem 0.5rem;
 }
 </style>

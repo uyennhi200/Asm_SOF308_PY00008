@@ -30,14 +30,8 @@
                 <li class="nav-item">
                   <router-link class="nav-link" to="/">Home</router-link>
                 </li>
-                <!--<li class="nav-item">
-                  <router-link class="nav-link" to="/about">About</router-link>
-                </li>-->
                 <li v-if="isLoggedIn" class="nav-item">
                   <router-link class="nav-link" to="/manager">Manager</router-link>
-                </li>
-                <li class="nav-item">
-                  <router-link class="nav-link" to="/contact">Contact</router-link>
                 </li>
                 <li v-if="isLoggedIn" class="nav-item">
                   <router-link class="nav-link" to="/about">Profile</router-link>
@@ -63,20 +57,18 @@ import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 
 export default {
-  name: "NavBar", // Đặt tên component
+  name: "NavBar",
   setup() {
     const store = useStore();
     const router = useRouter();
 
-    // Kết nối trạng thái từ Vuex
     const isLoggedIn = computed(() => store.getters.getLoginStatus);
 
-    // Hàm đăng xuất
     const logout = () => {
       localStorage.removeItem("userInfo");
       localStorage.removeItem("isLoggedIn");
-      store.commit("setLoginStatus", false); // Cập nhật trạng thái đăng xuất
-      router.push("/login"); // Điều hướng về trang login
+      store.commit("setLoginStatus", false);
+      router.push("/login");
     };
 
     return {
@@ -89,11 +81,32 @@ export default {
 
 <style scoped>
 .nav-link {
-  color: #333 !important;
+  color: #333;
   font-size: 16px;
+  text-decoration: none;
+  position: relative;
+  transition: color 0.3s ease;
+  padding-bottom: 5px;
+  display: inline-block;
 }
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 50%;
+  background-color: #007bff;
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
 .nav-link:hover {
-  color: #007bff !important;
-  text-decoration: underline;
+  color: #007bff;
+}
+
+.nav-link:hover::after {
+  width: 100%;
 }
 </style>
